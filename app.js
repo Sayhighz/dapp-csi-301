@@ -71,6 +71,12 @@
     if (err?.code === "ACTION_REJECTED" || err?.code === 4001) {
       return "ผู้ใช้ยกเลิกรายการใน MetaMask";
     }
+    // MetaMask wraps node errors, so ethers reports a bare "missing revert data";
+    // surface the node's own message (e.g. insufficient funds) instead.
+    const nodeError = err?.info?.error;
+    if (err?.code === "CALL_EXCEPTION" && !err.reason && nodeError) {
+      return nodeError.data?.message || nodeError.message || err.shortMessage;
+    }
     return err?.reason || err?.shortMessage || err?.message || String(err);
   }
 
@@ -183,6 +189,7 @@
   async function refreshWalletBalance() {
     const wei = await state.provider.getBalance(state.account);
     el.walletBalance.textContent = `${ethers.formatEther(wei)} ETH`;
+    return wei;
   }
 
   async function refreshBankBalance() {
@@ -227,6 +234,10 @@
 
   async function deposit() {
     const value = parseAmount();
+    const walletBalance = await refreshWalletBalance();
+    if (value >= walletBalance) {
+      throw new Error(`ETH ใน wallet ไม่พอ (มี ${ethers.formatEther(walletBalance)} ETH และต้องเหลือไว้จ่ายค่า gas)`);
+    }
     await sendTransaction("Deposit", "Deposit", () => state.contract.deposit({ value }));
   }
 
