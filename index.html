@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bank DApp</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="identity">
+      <span class="label">Student ID</span>
+      <strong id="student-id"></strong>
+      <span class="divider" aria-hidden="true">|</span>
+      <span class="label">Name</span>
+      <strong id="student-name"></strong>
+    </div>
+    <button id="connect-btn" class="btn btn-outline" type="button">Connect Wallet</button>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <h1>Bank DApp</h1>
+      <p class="muted">ฝาก ถอน และตรวจสอบยอดเงินผ่าน Bank Smart Contract ด้วย MetaMask</p>
+
+      <dl class="status">
+        <div><dt>Account</dt><dd id="account" class="mono">Not connected</dd></div>
+        <div><dt>Network</dt><dd id="network">-</dd></div>
+        <div><dt>Wallet balance</dt><dd id="wallet-balance">-</dd></div>
+      </dl>
+
+      <form id="contract-form" class="contract-form">
+        <label for="contract-address">Contract address</label>
+        <div class="row">
+          <input id="contract-address" class="mono" type="text" placeholder="0x..." autocomplete="off" spellcheck="false" required>
+          <button id="contract-btn" class="btn btn-dark" type="submit">Connect Contract</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="card" id="bank-card" aria-disabled="true">
+      <div class="balance-row">
+        <div>
+          <span class="muted">Current Balance</span>
+          <p class="balance"><span id="bank-balance">0</span> ETH</p>
+          <span class="hint-inline">ยอดที่ฝากไว้ใน Bank contract (checkBlance)</span>
+        </div>
+        <button id="check-btn" class="btn btn-outline" type="button" disabled>Check Balance</button>
+      </div>
+
+      <form id="tx-form" class="tx-form">
+        <label for="amount">Amount (ETH)</label>
+        <div class="row">
+          <input id="amount" type="text" inputmode="decimal" placeholder="0.01" autocomplete="off" disabled>
+          <button id="deposit-btn" class="btn btn-deposit" type="button" disabled>Deposit</button>
+          <button id="withdraw-btn" class="btn btn-withdraw" type="button" disabled>Withdraw</button>
+        </div>
+      </form>
+      <p id="gate-hint" class="hint">Connect MetaMask และ Contract ก่อนทำธุรกรรม</p>
+    </section>
+
+    <section class="card">
+      <h2>Activity</h2>
+      <ul id="feedback" class="feedback" aria-live="polite"></ul>
+    </section>
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.13.4/ethers.umd.min.js"
+          integrity="sha512-V3xRGsQMQ8CG4l2gVN44TCDmNY5cdlxbSvejrgmWxcLKHft0Q3XQDbeuJ9aot14mpNuRWGtI//WKraedDGNZ+g=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
